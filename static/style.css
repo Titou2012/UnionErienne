@@ -1,0 +1,93 @@
+/* RESET */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* VARIABLES */
+:root {
+  --couleur-primaire: royalblue;
+  --couleur-texte: #333;
+  --couleur-texte-inverse: #fff;
+  --couleur-article: rgba(255, 255, 255, 0.9);
+}
+
+/* BASE */
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  font-family: 'Cinzel', serif;
+  color: var(--couleur-texte);
+}
+
+/* BACKGROUND */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background: linear-gradient(135deg, #e6f2ff, #b3d9ff);
+  z-index: -2;
+}
+
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background-image: url('ue_logo.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  opacity: 0.2;
+  z-index: -1;
+}
+
+/* HEADER */
+header {
+  display: flex;
+  justify-content: space-between;
+  padding: 1rem;
+  background: white;
+}
+
+nav {
+  display: flex;
+  gap: 1rem;
+}
+
+nav a {
+  text-decoration: none;
+  color: var(--couleur-texte);
+}
+
+/* MAIN */
+main {
+  flex: 1;
+  max-width: 800px;
+  margin: auto;
+  padding: 20px;
+  background: var(--couleur-article);
+  border-radius: 10px;
+}
+
+/* ARTICLES */
+article {
+  margin: 15px 0;
+  padding: 10px;
+  border-left: 5px solid royalblue;
+}
+
+/* FOOTER */
+footer {
+  background: #222;
+  color: white;
+  text-align: center;
+  padding: 10px;
+}
+
+/* DARK MODE */
+body.mode-sombre {
+  --couleur-texte: white;
+  background: #111;
+}

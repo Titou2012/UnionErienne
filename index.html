@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="./static/style.css">
+
+    <!-- Favicon -->
+    <link rel="icon" href="./static/favicon.ico">
+
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&display=swap" rel="stylesheet">
+
+    <title>Yeti</title>
+</head>
+
+<body>
+
+    <!-- Logo -->
+    <a href="./" class="header-logo">
+        <img src="./static/logo_ue.png" alt="Logo Yeti" class="logo-img">
+    </a>
+
+    <input type="checkbox" id="toggle-menu">
+
+    <header>
+        <h1 class="logo"><span class="surligne">Yeti</span>.</h1>
+
+        <nav>
+            <a href="./">Accueil</a>
+            <a href="./articles.html">Charte</a>
+        </nav>
+
+        <div>
+            <button class="toggle-theme">🌓</button>
+
+            <label for="toggle-menu" class="menu-hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </label>
+        </div>
+    </header>
+
+    <div class="menu-mobile">
+        <a href="./">Accueil</a>
+        <a href="./articles.html">Charte</a>
+    </div>
+
+    <main>
+        <h2>Bienvenue sur Yeti</h2>
+        <p>Bienvenue sur le site officiel.</p>
+    </main>
+
+    <footer>
+        <p>© 2026 Yeti</p>
+    </footer>
+
+    <script>
+        document.querySelector('.toggle-theme')
+        .addEventListener('click', () => {
+            document.body.classList.toggle('mode-sombre');
+        });
+    </script>
+
+</body>
+</html>
