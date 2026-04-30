@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./static/style.css">
+    <link rel="icon" href="./static/favicon.ico">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&display=swap" rel="stylesheet">
+    <title>Membres – Union Erienne</title>
+</head>
+<body>
+<a href="./" class="header-logo">
+    <img src="./static/logo_ue.png" alt="Logo Union Erienne" class="logo-img">
+</a>
+<input type="checkbox" id="toggle-menu">
+<header>
+    <h1 class="logo"><span class="surligne">Union Erienne</span>.</h1>
+    <nav>
+        <a href="./">Accueil</a>
+        <a href="./a-propos.html">À propos</a>
+        <a href="./membres.html">Membres</a>
+        <a href="./institutions.html">Institutions</a>
+        <a href="./commissions.html">Commissions</a>
+        <a href="./evenements.html">Événements</a>
+        <a href="./documents.html">Documents</a>
+        <a href="./media.html">Médias</a>
+        <a href="./contact.html">Contact</a>
+        <a href="./recrutement.html">Recrutement</a>
+        <a href="./faq.html">FAQ</a>
+        <a href="./liens.html">Liens utiles</a>
+    </nav>
+</header>
+<main>
+    <h2>Pays membres de l’Union Erienne</h2>
+    <ul>
+        <li><strong>Geekville</strong> – Capitale : Neotopia</li>
+        <li><strong>Océana</strong> – Capitale : Poseïdona</li>
+        <li><strong>Bamazoneville</strong> – Capitale : Amazonis</li>
+        <li><strong>Brouardland</strong> – Capitale : Brouardia</li>
+        <li><strong>Artagne</strong> – Capitale : Dartonia</li>
+    </ul>
+    <h3>Partenaires et associés commerciaux</h3>
+    <ul>
+        <li>Bureau de Coopération Culturelle</li>
+        <li>Conseil de Développement Économique</li>
+    </ul>
+</main>
+<footer>
+    <p>&copy; 2026 Union Erienne</p>
+</footer>
+<script>
+    document.querySelector('.toggle-theme')?.addEventListener('click', () => {
+        document.body.classList.toggle('mode-sombre');
+    });
+</script>
+</body>
+</html>
