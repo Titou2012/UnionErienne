@@ -1,6 +1,93 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./static/style.css">
+    <link rel="icon" href="./static/favicon.ico">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&display=swap" rel="stylesheet">
+    <title>FAQ – Union Erienne</title>
+
+    <style>
+        .faq-item { margin-bottom: 20px; }
+        .faq-question { cursor: pointer; font-weight: bold; }
+        .faq-answer { display: none; margin-top: 5px; }
+
+        .comment { margin: 5px 0; padding: 5px; border-left: 3px solid #ccc; }
+        .pending { opacity: 0.5; }
+        .approved { border-color: green; }
+
+        .admin-btn { margin-left: 10px; cursor: pointer; }
+    </style>
+</head>
+<body>
+
+<a href="./" class="header-logo">
+    <img src="./static/logo_ue.png" alt="Logo Union Erienne" class="logo-img">
+</a>
+
+<input type="checkbox" id="toggle-menu">
+
+<header>
+    <h1 class="logo"><span class="surligne">Union Erienne</span>.</h1>
+    <nav>
+        <a href="./">Accueil</a>
+        <a href="./a-propos.html">À propos</a>
+        <a href="./membres.html">Membres</a>
+        <a href="./institutions.html">Institutions</a>
+        <a href="./commissions.html">Commissions</a>
+        <a href="./evenements.html">Événements</a>
+        <a href="./documents.html">Documents</a>
+        <a href="./media.html">Médias</a>
+        <a href="./contact.html">Contact</a>
+        <a href="./recrutement.html">Recrutement</a>
+        <a href="./faq.html">FAQ</a>
+        <a href="./liens.html">Liens utiles</a>
+    </nav>
+</header>
+
+<main>
+    <h2>Foire Aux Questions – Union Erienne</h2>
+
+    <div class="faq-item">
+        <div class="faq-question">Qu’est-ce que l’Union Erienne ?</div>
+        <div class="faq-answer">
+            Une alliance de plusieurs pays visant la coopération et le développement.
+            <div class="comments"></div>
+            <input type="text" placeholder="Ajouter un commentaire">
+            <button onclick="addComment(this)">Envoyer</button>
+        </div>
+    </div>
+
+    <div class="faq-item">
+        <div class="faq-question">Quels sont les pays membres ?</div>
+        <div class="faq-answer">
+            Geekville, Océana, Bamazoneville, Brouardland et Artagne.
+            <div class="comments"></div>
+            <input type="text" placeholder="Ajouter un commentaire">
+            <button onclick="addComment(this)">Envoyer</button>
+        </div>
+    </div>
+
+    <div class="faq-item">
+        <div class="faq-question">Comment rejoindre l’Union ?</div>
+        <div class="faq-answer">
+            Consultez la section recrutement pour plus d’informations.
+            <div class="comments"></div>
+            <input type="text" placeholder="Ajouter un commentaire">
+            <button onclick="addComment(this)">Envoyer</button>
+        </div>
+    </div>
+
+</main>
+
+<footer>
+    <p>&copy; 2026 Union Erienne</p>
+</footer>
+
 <script>
 /* =========================
-   FAQ ACCORDION AMÉLIORÉ
+   FAQ ACCORDION
 ========================= */
 const questions = document.querySelectorAll('.faq-question');
 
@@ -8,7 +95,7 @@ questions.forEach((q, index) => {
     q.addEventListener('click', () => {
         const answer = q.nextElementSibling;
 
-        // Fermer toutes les autres
+        // Fermer les autres
         document.querySelectorAll('.faq-answer').forEach(a => {
             if (a !== answer) a.style.display = 'none';
         });
@@ -21,7 +108,7 @@ questions.forEach((q, index) => {
 });
 
 /* =========================
-   SAUVEGARDE ÉTAT FAQ
+   SAUVEGARDE FAQ
 ========================= */
 function saveFAQState() {
     const states = [];
@@ -41,7 +128,7 @@ function loadFAQState() {
 }
 
 /* =========================
-   COMMENTAIRES AVEC STOCKAGE
+   COMMENTAIRES
 ========================= */
 function addComment(btn) {
     const container = btn.parentElement;
@@ -67,7 +154,7 @@ function addComment(btn) {
 }
 
 /* =========================
-   AFFICHAGE COMMENTAIRES
+   AFFICHAGE
 ========================= */
 function renderComments() {
     const allComments = JSON.parse(localStorage.getItem('comments')) || {};
@@ -94,7 +181,7 @@ function renderComments() {
 }
 
 /* =========================
-   APPROUVER COMMENTAIRE
+   ACTIONS ADMIN
 ========================= */
 function approveComment(faqIndex, commentIndex) {
     let allComments = JSON.parse(localStorage.getItem('comments')) || {};
@@ -105,9 +192,6 @@ function approveComment(faqIndex, commentIndex) {
     renderComments();
 }
 
-/* =========================
-   SUPPRIMER COMMENTAIRE
-========================= */
 function deleteComment(faqIndex, commentIndex) {
     let allComments = JSON.parse(localStorage.getItem('comments')) || {};
 
@@ -131,3 +215,6 @@ function getFAQIndex(element) {
 loadFAQState();
 renderComments();
 </script>
+
+</body>
+</html>
