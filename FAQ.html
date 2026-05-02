@@ -12,12 +12,6 @@
         .faq-item { margin-bottom: 20px; }
         .faq-question { cursor: pointer; font-weight: bold; }
         .faq-answer { display: none; margin-top: 5px; }
-
-        .comment { margin: 5px 0; padding: 5px; border-left: 3px solid #ccc; }
-        .pending { opacity: 0.5; }
-        .approved { border-color: green; }
-
-        .admin-btn { margin-left: 10px; cursor: pointer; }
     </style>
 </head>
 <body>
@@ -53,9 +47,6 @@
         <div class="faq-question">Qu’est-ce que l’Union Erienne ?</div>
         <div class="faq-answer">
             Une alliance de plusieurs pays visant la coopération et le développement.
-            <div class="comments"></div>
-            <input type="text" placeholder="Ajouter un commentaire">
-            <button onclick="addComment(this)">Envoyer</button>
         </div>
     </div>
 
@@ -63,9 +54,6 @@
         <div class="faq-question">Quels sont les pays membres ?</div>
         <div class="faq-answer">
             Geekville, Océana, Bamazoneville, Brouardland et Artagne.
-            <div class="comments"></div>
-            <input type="text" placeholder="Ajouter un commentaire">
-            <button onclick="addComment(this)">Envoyer</button>
         </div>
     </div>
 
@@ -73,11 +61,22 @@
         <div class="faq-question">Comment rejoindre l’Union ?</div>
         <div class="faq-answer">
             Consultez la section recrutement pour plus d’informations.
-            <div class="comments"></div>
-            <input type="text" placeholder="Ajouter un commentaire">
-            <button onclick="addComment(this)">Envoyer</button>
         </div>
     </div>
+
+    <!-- =========================
+         COMMENTAIRES GLOBALS
+    ========================= -->
+    <h3>Commentaires</h3>
+
+    <script src="https://utteranc.es/client.js"
+            repo="Titou2012/UnionErienne"
+            issue-term="pathname"
+            label="commentaires"
+            theme="github-light"
+            crossorigin="anonymous"
+            async>
+    </script>
 
 </main>
 
@@ -91,129 +90,17 @@
 ========================= */
 const questions = document.querySelectorAll('.faq-question');
 
-questions.forEach((q, index) => {
+questions.forEach((q) => {
     q.addEventListener('click', () => {
         const answer = q.nextElementSibling;
 
-        // Fermer les autres
         document.querySelectorAll('.faq-answer').forEach(a => {
             if (a !== answer) a.style.display = 'none';
         });
 
-        // Toggle
         answer.style.display = answer.style.display === 'block' ? 'none' : 'block';
-
-        saveFAQState();
     });
 });
-
-/* =========================
-   SAUVEGARDE FAQ
-========================= */
-function saveFAQState() {
-    const states = [];
-    document.querySelectorAll('.faq-answer').forEach(a => {
-        states.push(a.style.display === 'block');
-    });
-    localStorage.setItem('faqStates', JSON.stringify(states));
-}
-
-function loadFAQState() {
-    const states = JSON.parse(localStorage.getItem('faqStates'));
-    if (!states) return;
-
-    document.querySelectorAll('.faq-answer').forEach((a, i) => {
-        if (states[i]) a.style.display = 'block';
-    });
-}
-
-/* =========================
-   COMMENTAIRES
-========================= */
-function addComment(btn) {
-    const container = btn.parentElement;
-    const input = btn.previousElementSibling;
-    const text = input.value.trim();
-    if (!text) return;
-
-    const index = getFAQIndex(container);
-
-    const commentData = {
-        text: text,
-        approved: false
-    };
-
-    let allComments = JSON.parse(localStorage.getItem('comments')) || {};
-    if (!allComments[index]) allComments[index] = [];
-
-    allComments[index].push(commentData);
-    localStorage.setItem('comments', JSON.stringify(allComments));
-
-    renderComments();
-    input.value = '';
-}
-
-/* =========================
-   AFFICHAGE
-========================= */
-function renderComments() {
-    const allComments = JSON.parse(localStorage.getItem('comments')) || {};
-
-    document.querySelectorAll('.faq-item').forEach((item, index) => {
-        const container = item.querySelector('.comments');
-        container.innerHTML = '';
-
-        if (!allComments[index]) return;
-
-        allComments[index].forEach((c, i) => {
-            const div = document.createElement('div');
-            div.className = 'comment ' + (c.approved ? 'approved' : 'pending');
-
-            div.innerHTML = `
-                ${c.text}
-                <span class="admin-btn" onclick="approveComment(${index}, ${i})">✔</span>
-                <span class="admin-btn" style="color:red;" onclick="deleteComment(${index}, ${i})">✖</span>
-            `;
-
-            container.appendChild(div);
-        });
-    });
-}
-
-/* =========================
-   ACTIONS ADMIN
-========================= */
-function approveComment(faqIndex, commentIndex) {
-    let allComments = JSON.parse(localStorage.getItem('comments')) || {};
-
-    allComments[faqIndex][commentIndex].approved = true;
-
-    localStorage.setItem('comments', JSON.stringify(allComments));
-    renderComments();
-}
-
-function deleteComment(faqIndex, commentIndex) {
-    let allComments = JSON.parse(localStorage.getItem('comments')) || {};
-
-    allComments[faqIndex].splice(commentIndex, 1);
-
-    localStorage.setItem('comments', JSON.stringify(allComments));
-    renderComments();
-}
-
-/* =========================
-   UTILS
-========================= */
-function getFAQIndex(element) {
-    return Array.from(document.querySelectorAll('.faq-item'))
-        .indexOf(element.closest('.faq-item'));
-}
-
-/* =========================
-   INIT
-========================= */
-loadFAQState();
-renderComments();
 </script>
 
 </body>
