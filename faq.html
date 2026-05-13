@@ -32,18 +32,19 @@
 </header>
 <main>
     <h2>Foire Aux Questions</h2>
-    <h3>Qu'est-ce que l'Union Erienne ?</h3>
-    <p>L'Union Erienne est une alliance de cinq pays fondée en 2025 pour favoriser la coopération économique, culturelle et politique.</p>
-    <h3>Quels sont les pays membres ?</h3>
-    <p>Geekville, Océana, Bamazoneville, Brouardland et Artagne.</p>
-    <h3>Comment puis-je participer aux événements ?</h3>
-    <p>Les événements sont généralement ouverts aux citoyens des pays membres. Consultez la page Événements pour les détails.</p>
-    <h3>Comment devenir partenaire commercial ?</h3>
-    <p>Pour les opportunités commerciales, contactez notre Conseil Économique via la page Contact.</p>
-    <h3>Où trouver les documents officiels ?</h3>
-    <p>Tous les documents sont accessibles sur la page Documents du site.</p>
-    <h3>Comment postuler pour une offre d'emploi ?</h3>
-    <p>Consultez la page Recrutement pour les offres actuelles et les modalités de candidature.</p>
+    <p>Les questions et réponses ci-dessous proviennent directement de nos issues GitHub. Vous pouvez ajouter des commentaires, poser des questions ou voter pour les réponses.</p>
+    
+    <!-- Utterances Comments Section -->
+    <section id="utterances-section" style="margin-top: 3rem;">
+        <script src="https://utteranc.es/client.js"
+                repo="Titou2012/UnionErienne"
+                issue-term="pathname"
+                label="FAQ"
+                theme="github-light"
+                crossorigin="anonymous"
+                async>
+        </script>
+    </section>
 </main>
 <footer>
     <p>&copy; 2026 Union Erienne</p>
@@ -51,6 +52,12 @@
 <script>
     document.querySelector('.toggle-theme')?.addEventListener('click', () => {
         document.body.classList.toggle('mode-sombre');
+        // Mettre à jour le thème d'Utterances
+        const utterancesIframe = document.querySelector('iframe.utterances-frame');
+        if (utterancesIframe) {
+            const isDark = document.body.classList.contains('mode-sombre');
+            utterancesIframe.style.colorScheme = isDark ? 'dark' : 'light';
+        }
     });
 </script>
 </body>
