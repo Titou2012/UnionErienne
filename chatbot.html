@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./static/style.css">
+    <link rel="icon" href="./static/favicon.ico">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&display=swap" rel="stylesheet">
+    <title>Chatbot IA – Union Erienne</title>
+    <style>
+        .chatbot-page-container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .chatbot-intro {
+            background: linear-gradient(135deg, #2c3e50 0%, #e74c3c 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .chatbot-intro h2 {
+            margin-top: 0;
+            font-size: 28px;
+        }
+
+        .chatbot-intro p {
+            font-size: 16px;
+            line-height: 1.6;
+        }
+
+        .chat-features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .feature {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid #e74c3c;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .feature h3 {
+            color: #2c3e50;
+            margin-top: 0;
+            font-size: 18px;
+        }
+
+        .feature p {
+            color: #555;
+            font-size: 14px;
+            margin: 0;
+            line-height: 1.5;
+        }
+
+        .chat-section {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .chat-section h3 {
+            color: #2c3e50;
+            border-bottom: 2px solid #e74c3c;
+            padding-bottom: 10px;
+        }
+
+        .faq-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .faq-list li {
+            padding: 12px 0;
+            border-bottom: 1px solid #ecf0f1;
+        }
+
+        .faq-list li:last-child {
+            border-bottom: none;
+        }
+
+        .faq-list strong {
+            color: #e74c3c;
+        }
+
+        body.mode-sombre .chatbot-intro {
+            background: linear-gradient(135deg, #34495e 0%, #c0392b 100%);
+        }
+
+        body.mode-sombre .feature {
+            background: #2c3e50;
+            color: white;
+        }
+
+        body.mode-sombre .feature h3,
+        body.mode-sombre .feature p {
+            color: #ecf0f1;
+        }
+
+        body.mode-sombre .chat-section {
+            background: #34495e;
+            color: #ecf0f1;
+        }
+
+        body.mode-sombre .chat-section h3 {
+            color: #ecf0f1;
+            border-bottom-color: #e74c3c;
+        }
+
+        body.mode-sombre .faq-list li {
+            border-bottom-color: #2c3e50;
+        }
+    </style>
+</head>
+<body>
+    <a href="./" class="header-logo">
+        <img src="./static/logo_ue.png" alt="Logo Union Erienne" class="logo-img">
+    </a>
+    <input type="checkbox" id="toggle-menu">
+    <header>
+        <h1 class="logo"><span class="surligne">Union Erienne</span>.</h1>
+        <nav>
+            <a href="./">Accueil</a>
+            <a href="./a-propos.html">À propos</a>
+            <a href="./membres.html">Membres</a>
+            <a href="./institutions.html">Institutions</a>
+            <a href="./commissions.html">Commissions</a>
+            <a href="./evenements.html">Événements</a>
+            <a href="./documents.html">Documents</a>
+            <a href="./media.html">Médias</a>
+            <a href="./contact.html">Contact</a>
+            <a href="./recrutement.html">Recrutement</a>
+            <a href="./faq.html">FAQ</a>
+            <a href="./liens.html">Liens utiles</a>
+        </nav>
+        <div>
+            <button class="toggle-theme">🔋</button>
+            <label for="toggle-menu" class="menu-hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </label>
+        </div>
+    </header>
+
+    <main>
+        <div class="chatbot-page-container">
+            <div class="chatbot-intro">
+                <h2>🤖 Assistant IA Union Erienne</h2>
+                <p>Bienvenue sur notre assistant IA ! Posez vos questions sur l'Union Erienne, ses membres, institutions et plus encore. Notre IA vous fournira des réponses rapides et précises.</p>
+            </div>
+
+            <div class="chat-features">
+                <div class="feature">
+                    <h3>💡 Intelligent</h3>
+                    <p>L'IA comprend vos questions en français et fournit des réponses pertinentes basées sur les données du site.</p>
+                </div>
+                <div class="feature">
+                    <h3>⚡ Rapide</h3>
+                    <p>Obtenez des réponses instantanément sans attendre. Parfait pour trouver les informations que vous cherchez.</p>
+                </div>
+                <div class="feature">
+                    <h3>🔒 Sécurisé</h3>
+                    <p>Vos données sont protégées. L'IA fonctionne via un serveur sécurisé avec authentification.</p>
+                </div>
+            </div>
+
+            <div class="chat-section">
+                <h3>📚 À propos de l'Union Erienne</h3>
+                <p>L'Union Erienne est une union de 5 pays membres et associés commerciaux :</p>
+                <ul>
+                    <li><strong>Geekville</strong> - Vers la technologie et l'innovation</li>
+                    <li><strong>Océana</strong> - Puissance maritime</li>
+                    <li><strong>Bamazoneville</strong> - Ressources naturelles</li>
+                    <li><strong>Brouardland</strong> - Tradition et culture</li>
+                    <li><strong>Artagne</strong> - Arts et créativité</li>
+                </ul>
+            </div>
+
+            <div class="chat-section" style="margin-top: 20px;">
+                <h3>❓ Questions fréquentes</h3>
+                <ul class="faq-list">
+                    <li>
+                        <strong>Qui sont les membres de l'Union Erienne ?</strong>
+                        <p style="margin: 5px 0 0 0; color: inherit; font-size: 14px;">Découvrez les 5 pays qui composent cette union unique.</p>
+                    </li>
+                    <li>
+                        <strong>Comment fonctionne l'Union Erienne ?</strong>
+                        <p style="margin: 5px 0 0 0; color: inherit; font-size: 14px;">L'Union Erienne dispose d'institutions, de commissions et de projets communs.</p>
+                    </li>
+                    <li>
+                        <strong>Comment me contacter ou rejoindre ?</strong>
+                        <p style="margin: 5px 0 0 0; color: inherit; font-size: 14px;">Consultez les pages Contact et Recrutement pour plus d'informations.</p>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="chat-section" style="margin-top: 20px; background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%); color: white;">
+                <h3 style="color: white; border-bottom-color: rgba(255,255,255,0.3);">💬 Posez votre question !</h3>
+                <p>Utilisez le widget de chat en bas à droite pour discuter avec l'IA. Vous pouvez poser des questions sur n'importe quel aspect de l'Union Erienne.</p>
+                <p style="font-size: 14px; opacity: 0.9;"><em>Conseil : Soyez précis dans vos questions pour obtenir les meilleures réponses.</em></p>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 Union Erienne</p>
+    </footer>
+
+    <!-- Charger le script du chatbot -->
+    <script src="./static/chatbot.js"></script>
+
+    <script>
+        document.querySelector('.toggle-theme')
+        .addEventListener('click', () => {
+            document.body.classList.toggle('mode-sombre');
+        });
+    </script>
+</body>
+</html>
