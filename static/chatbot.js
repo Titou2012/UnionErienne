@@ -486,5 +486,5 @@ class UnionErienneChatbot {
 
 // Initialiser le chatbot quand la page est chargée
 document.addEventListener('DOMContentLoaded', () => {
-  window.unioErienneChatbot = new UnionErienneChatbot('/api/chat');
+  new UnionErienneChatbot('https://unionerienne-1.onrender.com/api/chat');
 });
