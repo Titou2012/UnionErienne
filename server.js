@@ -3,6 +3,8 @@ const express = require('express');
 const cors = require('cors');
 const axios = require('axios');
 const path = require('path');
+const nodemailer = require('nodemailer');
+const fs = require('fs');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -22,6 +24,7 @@ const SITE_CONTEXT = `Tu es l'assistant IA officiel de l'Union Erienne. Tu dois 
 DONNÉES OFFICIELLES DE L'UNION ERIENNE:
 
 PAYS MEMBRES ET CAPITALES:
+
 - Geekville → Capitale: Geekville
 - Océana → Capitale: Océana  
 - Bamazoneville → Capitale: Exotique
@@ -156,6 +159,68 @@ app.post('/api/chat', async (req, res) => {
       success: false,
       error: errorMessage
     });
+  }
+});
+
+// Endpoint pour le formulaire de contact
+app.post('/api/contact', async (req, res) => {
+  try {
+    const { nom, email, sujet, message } = req.body;
+
+    if (!nom || !email || !sujet || !message) {
+      return res.status(400).json({ success: false, error: 'Tous les champs sont requis' });
+    }
+
+    const contactRecipient = process.env.CONTACT_RECIPIENT || 'contact@unionerienne.eu';
+
+    // Si la configuration SMTP est présente, envoyer un email via nodemailer
+    if (process.env.SMTP_HOST && process.env.SMTP_USER && process.env.SMTP_PASS) {
+      const transporter = nodemailer.createTransport({
+        host: process.env.SMTP_HOST,
+        port: parseInt(process.env.SMTP_PORT || '587', 10),
+        secure: (process.env.SMTP_SECURE === 'true'),
+        auth: {
+          user: process.env.SMTP_USER,
+          pass: process.env.SMTP_PASS
+        }
+      });
+
+      const mailOptions = {
+        from: `${nom} <${email}>`,
+        to: contactRecipient,
+        subject: `[Contact site] ${sujet}`,
+        text: `Nom: ${nom}\nEmail: ${email}\nSujet: ${sujet}\nMessage:\n${message}\n\nEnvoyé le: ${new Date().toISOString()}`
+      };
+
+      await transporter.sendMail(mailOptions);
+
+      return res.json({ success: true, message: 'Message envoyé' });
+    }
+
+    // Si pas de SMTP configuré, logguer le message et renvoyer une réponse acceptée
+    const logEntry = {
+      nom,
+      email,
+      sujet,
+      message,
+      receivedAt: new Date().toISOString()
+    };
+
+    console.info('Contact message (no SMTP configured):', logEntry);
+
+    // Optionnel : sauvegarder dans un fichier local (non persistant sur certains hébergeurs)
+    try {
+      const filePath = path.join(__dirname, 'contact_messages.log');
+      fs.appendFileSync(filePath, JSON.stringify(logEntry) + '\n');
+    } catch (e) {
+      console.warn('Impossible d\'écrire le fichier de log:', e.message);
+    }
+
+    return res.json({ success: true, message: 'Message reçu (stocké en log). Configure SMTP pour envoyer les emails.' });
+
+  } catch (error) {
+    console.error('Erreur endpoint /api/contact:', error.message || error);
+    return res.status(500).json({ success: false, error: 'Erreur serveur lors de l\'envoi du message' });
   }
 });
 
