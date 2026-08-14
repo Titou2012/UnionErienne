@@ -1,4 +1,4 @@
-/**
+/*
  * Widget Chatbot IA pour Union Erienne
  * Communication sécurisée avec le serveur (clé API protégée)
  */
@@ -413,9 +413,19 @@ class UnionErienneChatbot {
       
       if (data.success) {
         this.removeLoadingIndicator();
-        this.addMessage(data.reply, 'bot');
+
+        // nettoyer la réponse pour retirer la mise en forme Markdown (asterisques, backticks, etc.)
+        let reply = data.reply || '';
+        // enlever **bold**
+        reply = reply.replace(/\*\*(.*?)\*\*/g, '$1');
+        // enlever *italic* ou *texte isolé*
+        reply = reply.replace(/\*(.*?)\*/g, '$1');
+        // enlever `code`
+        reply = reply.replace(/`+/g, '');
+
+        this.addMessage(reply, 'bot');
         this.conversationHistory.push({ role: 'user', content: message });
-        this.conversationHistory.push({ role: 'bot', content: data.reply });
+        this.conversationHistory.push({ role: 'bot', content: reply });
         this.saveConversationHistory();
       } else {
         throw new Error(data.error || 'Erreur inconnue');
