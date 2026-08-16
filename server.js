@@ -3,7 +3,6 @@ const express = require('express');
 const cors = require('cors');
 const axios = require('axios');
 const path = require('path');
-const nodemailer = require('nodemailer');
 const fs = require('fs');
 
 const app = express();
@@ -162,7 +161,7 @@ app.post('/api/chat', async (req, res) => {
   }
 });
 
-// Endpoint pour le formulaire de contact
+// Endpoint pour le formulaire de contact (sans envoi d'email)
 app.post('/api/contact', async (req, res) => {
   try {
     const { nom, email, sujet, message } = req.body;
@@ -173,31 +172,7 @@ app.post('/api/contact', async (req, res) => {
 
     const contactRecipient = process.env.CONTACT_RECIPIENT || 'contact@unionerienne.eu';
 
-    // Si la configuration SMTP est présente, envoyer un email via nodemailer
-    if (process.env.SMTP_HOST && process.env.SMTP_USER && process.env.SMTP_PASS) {
-      const transporter = nodemailer.createTransport({
-        host: process.env.SMTP_HOST,
-        port: parseInt(process.env.SMTP_PORT || '587', 10),
-        secure: (process.env.SMTP_SECURE === 'true'),
-        auth: {
-          user: process.env.SMTP_USER,
-          pass: process.env.SMTP_PASS
-        }
-      });
-
-      const mailOptions = {
-        from: `${nom} <${email}>`,
-        to: contactRecipient,
-        subject: `[Contact site] ${sujet}`,
-        text: `Nom: ${nom}\nEmail: ${email}\nSujet: ${sujet}\nMessage:\n${message}\n\nEnvoyé le: ${new Date().toISOString()}`
-      };
-
-      await transporter.sendMail(mailOptions);
-
-      return res.json({ success: true, message: 'Message envoyé' });
-    }
-
-    // Si pas de SMTP configuré, logguer le message et renvoyer une réponse acceptée
+    // On n'utilise plus nodemailer ici — on enregistre le message en log/fichier
     const logEntry = {
       nom,
       email,
@@ -206,9 +181,9 @@ app.post('/api/contact', async (req, res) => {
       receivedAt: new Date().toISOString()
     };
 
-    console.info('Contact message (no SMTP configured):', logEntry);
+    console.info('Contact message (recorded):', logEntry);
 
-    // Optionnel : sauvegarder dans un fichier local (non persistant sur certains hébergeurs)
+    // Sauvegarder dans un fichier local (non persistant sur certains hébergeurs)
     try {
       const filePath = path.join(__dirname, 'contact_messages.log');
       fs.appendFileSync(filePath, JSON.stringify(logEntry) + '\n');
@@ -216,7 +191,7 @@ app.post('/api/contact', async (req, res) => {
       console.warn('Impossible d\'écrire le fichier de log:', e.message);
     }
 
-    return res.json({ success: true, message: 'Message reçu (stocké en log). Configure SMTP pour envoyer les emails.' });
+    return res.json({ success: true, message: 'Message reçu (enregistré). Configurez un service externe si vous souhaitez envoyer des emails.' });
 
   } catch (error) {
     console.error('Erreur endpoint /api/contact:', error.message || error);
