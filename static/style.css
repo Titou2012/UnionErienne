@@ -56,9 +56,15 @@ nav {
   gap: 1rem;
 }
 
+/* Make nav links look and feel interactive like buttons */
 nav a {
   text-decoration: none;
   color: var(--couleur-texte);
+  display: inline-block;
+  padding: 6px 10px;
+  border-radius: 6px;
+  transition: color 0.16s ease, transform 0.16s ease, box-shadow 0.16s ease, background-color 0.16s ease;
+  cursor: pointer;
 }
 
 /* MAIN */
@@ -149,9 +155,11 @@ input[type="button"]:hover:not(:disabled),
 input[type="submit"]:hover:not(:disabled),
 .button:hover:not(:disabled),
 .btn:hover:not(:disabled),
-label[role="button"]:hover {
+label[role="button"]:hover,
+nav a:hover {
   transform: translateY(-3px) scale(1.02);
   box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+  background-color: rgba(0,0,0,0.03);
 }
 
 /* Slight press effect on active */
@@ -181,15 +189,8 @@ a:focus {
   outline-offset: 2px;
 }
 
-/* Nav links smoother hover */
-nav a {
-  transition: color 0.16s ease, transform 0.16s ease;
-}
-
-nav a:hover {
-  color: var(--couleur-primaire);
-  transform: translateY(-2px);
-}
+/* Nav links smoother hover - removed color-only change in favor of button-like hover */
+/* nav a:hover handled above */
 
 /* Header logo hover */
 .header-logo img {
@@ -213,10 +214,10 @@ form button {
 }
 
 form button[type="submit"]:hover:not(:disabled) {
-  background: darken(var(--couleur-primaire), 5%);
+  /* Provide a safe fallback color instead of darken() for broad compatibility */
+  background: #234e9f; /* darker royalblue fallback */
 }
 
-/* Utility: fallback for browsers without darken() - keep color stable */
-/* If your build system doesn't support color functions, the hover will still apply transform/box-shadow */
+/* Utility: fallback for browsers without color functions - hover still applies transform/box-shadow */
 
 /* END of global interaction styles */
