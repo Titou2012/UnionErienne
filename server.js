@@ -3,7 +3,8 @@ const express = require('express');
 const cors = require('cors');
 const axios = require('axios');
 const path = require('path');
-const nodemailer = require('nodemailer');
+// NOTE: we DO NOT require('nodemailer') here at top-level to avoid crash if not installed
+let nodemailer = null;
 const fs = require('fs');
 
 const app = express();
@@ -86,25 +87,25 @@ app.post('/api/chat', async (req, res) => {
 
     // Validation
     if (!message || typeof message !== 'string') {
-      return res.status(400).json({ 
+      return res.status(400).json({
         error: 'Message invalide',
-        success: false 
+        success: false
       });
     }
 
     if (message.trim().length === 0) {
-      return res.status(400).json({ 
+      return res.status(400).json({
         error: 'Le message ne peut pas être vide',
-        success: false 
+        success: false
       });
     }
 
     // Vérifier que la clé API est configurée
     if (!process.env.MISTRAL_API_KEY) {
       console.error('MISTRAL_API_KEY non configurée');
-      return res.status(500).json({ 
+      return res.status(500).json({
         error: 'Configuration serveur incomplète',
-        success: false 
+        success: false
       });
     }
 
@@ -123,7 +124,7 @@ app.post('/api/chat', async (req, res) => {
             content: message
           }
         ],
-        temperature: 0.3, // Réduit pour plus de cohérence
+        temperature: 0.3,
         max_tokens: 500
       },
       {
@@ -134,7 +135,7 @@ app.post('/api/chat', async (req, res) => {
       }
     );
 
-    const reply = response.data.choices[0].message.content;
+    const reply = response.data.choices?.[0]?.message?.content || '';
 
     res.json({
       success: true,
@@ -144,9 +145,9 @@ app.post('/api/chat', async (req, res) => {
 
   } catch (error) {
     console.error('Erreur API Mistral:', error.response?.data || error.message);
-    
+
     let errorMessage = 'Une erreur est survenue lors du traitement de votre question.';
-    
+
     if (error.response?.status === 401) {
       errorMessage = 'Erreur d\'authentification avec Mistral AI.';
     } else if (error.response?.status === 429) {
@@ -173,28 +174,63 @@ app.post('/api/contact', async (req, res) => {
 
     const contactRecipient = process.env.CONTACT_RECIPIENT || 'contact@unionerienne.eu';
 
-    // Si la configuration SMTP est présente, envoyer un email via nodemailer
-    if (process.env.SMTP_HOST && process.env.SMTP_USER && process.env.SMTP_PASS) {
-      const transporter = nodemailer.createTransport({
-        host: process.env.SMTP_HOST,
-        port: parseInt(process.env.SMTP_PORT || '587', 10),
-        secure: (process.env.SMTP_SECURE === 'true'),
-        auth: {
-          user: process.env.SMTP_USER,
-          pass: process.env.SMTP_PASS
+    // Si la configuration SMTP est présente, tenter d'envoyer via nodemailer.
+    // Mais ne pas planter si nodemailer n'est pas installé : fallback vers log.
+    const smtpConfigured = process.env.SMTP_HOST && process.env.SMTP_USER && process.env.SMTP_PASS;
+    if (smtpConfigured) {
+      try {
+        // essayer de charger nodemailer dynamiquement
+        if (!nodemailer) {
+          nodemailer = require('nodemailer');
         }
-      });
+      } catch (requireErr) {
+        console.warn('SMTP configuré mais nodemailer non installé. Utilisation du fallback de log.', requireErr.message);
+        // fallback -> log + file and inform the caller
+        const logEntry = { nom, email, sujet, message, receivedAt: new Date().toISOString(), note: 'nodemailer not installed' };
+        console.info('Contact message (nodemailer missing):', logEntry);
+        try {
+          const filePath = path.join(__dirname, 'contact_messages.log');
+          fs.appendFileSync(filePath, JSON.stringify(logEntry) + '\n');
+        } catch (e) {
+          console.warn('Impossible d\'écrire le fichier de log:', e.message);
+        }
+        return res.json({ success: true, message: 'Message reçu (stocké en log). SMTP configuré mais nodemailer non installé sur le serveur.' });
+      }
 
-      const mailOptions = {
-        from: `${nom} <${email}>`,
-        to: contactRecipient,
-        subject: `[Contact site] ${sujet}`,
-        text: `Nom: ${nom}\nEmail: ${email}\nSujet: ${sujet}\nMessage:\n${message}\n\nEnvoyé le: ${new Date().toISOString()}`
-      };
+      // Si nodemailer est disponible, essayer l'envoi
+      try {
+        const transporter = nodemailer.createTransport({
+          host: process.env.SMTP_HOST,
+          port: parseInt(process.env.SMTP_PORT || '587', 10),
+          secure: (process.env.SMTP_SECURE === 'true'),
+          auth: {
+            user: process.env.SMTP_USER,
+            pass: process.env.SMTP_PASS
+          }
+        });
 
-      await transporter.sendMail(mailOptions);
+        const mailOptions = {
+          from: `${nom} <${email}>`,
+          to: contactRecipient,
+          subject: `[Contact site] ${sujet}`,
+          text: `Nom: ${nom}\nEmail: ${email}\nSujet: ${sujet}\nMessage:\n${message}\n\nEnvoyé le: ${new Date().toISOString()}`
+        };
 
-      return res.json({ success: true, message: 'Message envoyé' });
+        await transporter.sendMail(mailOptions);
+        return res.json({ success: true, message: 'Message envoyé' });
+      } catch (sendErr) {
+        console.error('Erreur lors de l\'envoi SMTP:', sendErr.message || sendErr);
+        // Fallback -> log and respond success to avoid crash
+        const logEntry = { nom, email, sujet, message, receivedAt: new Date().toISOString(), smtpError: sendErr.message || String(sendErr) };
+        console.info('Contact message (SMTP send failed):', logEntry);
+        try {
+          const filePath = path.join(__dirname, 'contact_messages.log');
+          fs.appendFileSync(filePath, JSON.stringify(logEntry) + '\n');
+        } catch (e) {
+          console.warn('Impossible d\'écrire le fichier de log:', e.message);
+        }
+        return res.json({ success: true, message: 'Message reçu (tentative d\'envoi échouée, stocké en log). Vérifie la configuration SMTP.' });
+      }
     }
 
     // Si pas de SMTP configuré, logguer le message et renvoyer une réponse acceptée
@@ -226,7 +262,7 @@ app.post('/api/contact', async (req, res) => {
 
 // Endpoint de vérification
 app.get('/api/health', (req, res) => {
-  res.json({ 
+  res.json({
     status: 'ok',
     timestamp: new Date().toISOString()
   });
