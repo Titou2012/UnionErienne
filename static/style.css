@@ -129,3 +129,94 @@ body.mode-sombre {
   margin-left: 10px;
   cursor: pointer;
 }
+
+/* Global button/link interaction styles */
+button,
+input[type="button"],
+input[type="submit"],
+input[type="reset"],
+.button,
+.btn,
+label[role="button"] {
+  transition: transform 0.16s ease, box-shadow 0.16s ease, background-color 0.16s ease, opacity 0.16s ease;
+  -webkit-tap-highlight-color: transparent;
+  will-change: transform, box-shadow;
+}
+
+/* Hover effects for interactive elements (desktop) */
+button:hover:not(:disabled),
+input[type="button"]:hover:not(:disabled),
+input[type="submit"]:hover:not(:disabled),
+.button:hover:not(:disabled),
+.btn:hover:not(:disabled),
+label[role="button"]:hover {
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+}
+
+/* Slight press effect on active */
+button:active:not(:disabled),
+input[type="button"]:active:not(:disabled),
+input[type="submit"]:active:not(:disabled) {
+  transform: translateY(-1px) scale(0.995);
+  box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+}
+
+/* Disabled state */
+button:disabled,
+.btn:disabled,
+input[disabled] {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+/* Focus-visible for accessibility */
+button:focus,
+input[type="submit"]:focus,
+.btn:focus,
+a:focus {
+  outline: 3px solid rgba(100,150,255,0.25);
+  outline-offset: 2px;
+}
+
+/* Nav links smoother hover */
+nav a {
+  transition: color 0.16s ease, transform 0.16s ease;
+}
+
+nav a:hover {
+  color: var(--couleur-primaire);
+  transform: translateY(-2px);
+}
+
+/* Header logo hover */
+.header-logo img {
+  transition: transform 0.18s ease, opacity 0.18s ease;
+}
+
+.header-logo:hover img {
+  transform: scale(1.03) rotate(-1deg);
+  opacity: 0.95;
+}
+
+/* Make form buttons consistent */
+form button[type="submit"],
+form button {
+  background: var(--couleur-primaire);
+  color: var(--couleur-texte-inverse);
+  border: none;
+  padding: 10px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+form button[type="submit"]:hover:not(:disabled) {
+  background: darken(var(--couleur-primaire), 5%);
+}
+
+/* Utility: fallback for browsers without darken() - keep color stable */
+/* If your build system doesn't support color functions, the hover will still apply transform/box-shadow */
+
+/* END of global interaction styles */
