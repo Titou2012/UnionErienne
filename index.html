@@ -1,71 +1,108 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- CSS -->
-    <link rel="stylesheet" href="./static/style.css">
-    <!-- Favicon -->
-    <link rel="icon" href="./static/favicon.ico">
-    <!-- Google Font -->
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&display=swap" rel="stylesheet">
-    <title>Union Erienne</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <link rel="icon" href="./static/favicon.ico">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./static/style.css">
+  <title>Union Erienne</title>
 </head>
 <body>
-    <!-- Logo -->
-    <a href="./" class="header-logo">
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="./" class="brand" aria-label="Accueil - Union Erienne">
         <img src="./static/logo_ue.png" alt="Logo Union Erienne" class="logo-img">
-    </a>
-    <input type="checkbox" id="toggle-menu">
-    <header>
-        <h1 class="logo"><span class="surligne">Union Erienne</span>.</h1>
-        <nav>
-            <a href="./">Accueil</a>
-            <a href="./articles.html">Charte</a>
-            <a href="./a-propos.html">À propos</a>
-            <a href="./membres.html">Membres</a>
-            <a href="./institutions.html">Institutions</a>
-            <a href="./commissions.html">Commissions</a>
-            <a href="./evenements.html">Événements</a>
-            <a href="./documents.html">Documents</a>
-            <a href="./media.html">Médias</a>
-            <a href="./contact.html">Contact</a>
-            <a href="./recrutement.html">Recrutement</a>
-            <a href="./chatbot.html">Aide IA</a>
-            <a href="./FAQ.html">FAQ</a>
-            <a href="./liens.html">Liens utiles</a>
-        </nav>
-        <div>
-            <button class="toggle-theme">🔋</button>
-            <label for="toggle-menu" class="menu-hamburger">
-                <span></span>
-                <span></span>
-                <span></span>
-            </label>
-        </div>
-    </header>
-    <main>
-        <h2>Bienvenue sur le site officiel de l'Union Erienne</h2>
-        <p>Ce site est le site officiel de l'Union Erienne qui comporte 5 pays membres et associés commerciaux :</p>
-        <ul>
-            <li>Geekville</li>
-            <li>Océana</li>
-            <li>Bamazoneville</li>
-            <li>Brouardland</li>
-            <li>Artagne</li>
-        </ul>
-        <p>Découvrez les institutions, les projets communs, les documents partagés et toutes les informations sur cette union parfaite entre nations !</p>
-    </main>
-    <footer>
-        <p>&copy; 2026 Union Erienne</p>
-    </footer>
-    <!-- Charger le script du chatbot -->
-    <script src="./static/chatbot.js"></script>
-    <script>
-        document.querySelector('.toggle-theme')
-        .addEventListener('click', () => {
-            document.body.classList.toggle('mode-sombre');
-        });
-    </script>
+        <span class="brand-title">Union Erienne</span>
+      </a>
+
+      <button class="menu-toggle" aria-expanded="false" aria-controls="main-nav" aria-label="Ouvrir le menu">
+        <span class="hamburger"></span>
+      </button>
+
+      <nav id="main-nav" class="main-nav" role="navigation">
+        <a class="nav-link" href="./">Accueil</a>
+        <a class="nav-link" href="./articles.html">Charte</a>
+        <a class="nav-link" href="./a-propos.html">À propos</a>
+        <a class="nav-link" href="./membres.html">Membres</a>
+        <a class="nav-link" href="./institutions.html">Institutions</a>
+        <a class="nav-link" href="./commissions.html">Commissions</a>
+        <a class="nav-link" href="./evenements.html">Événements</a>
+        <a class="nav-link" href="./documents.html">Documents</a>
+        <a class="nav-link" href="./media.html">Médias</a>
+        <a class="nav-link" href="./contact.html">Contact</a>
+        <a class="nav-link" href="./recrutement.html">Recrutement</a>
+        <a class="nav-link" href="./chatbot.html">Aide IA</a>
+        <a class="nav-link" href="./FAQ.html">FAQ</a>
+        <a class="nav-link" href="./liens.html">Liens utiles</a>
+      </nav>
+
+      <div class="header-actions">
+        <button class="btn btn-theme" aria-pressed="false" title="Basculer thème">🌓</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="site-main container">
+    <section class="hero palette-hero">
+      <div class="hero-content">
+        <h1>Bienvenue sur le site officiel de l'Union Erienne</h1>
+        <p class="lead">Une union créative et colorée de 5 pays : Geekville, Océana, Bamazoneville, Brouardland et Artagne.</p>
+        <p class="muted">Découvrez institutions, projets, événements et ressources partagées — conçu pour être fluide sur mobile.</p>
+        <p><a class="btn btn-primary" href="./documents.html">Consulter les documents</a></p>
+      </div>
+      <div class="hero-visual" aria-hidden="true">
+        <!-- Décor original : formes colorées amorties -->
+        <svg viewBox="0 0 600 400" preserveAspectRatio="xMidYMid slice" class="hero-svg">
+          <defs>
+            <linearGradient id="g1" x1="0" x2="1">
+              <stop offset="0%" stop-color="#ff6b6b" />
+              <stop offset="100%" stop-color="#ffd56b" />
+            </linearGradient>
+            <linearGradient id="g2" x1="0" x2="1">
+              <stop offset="0%" stop-color="#6b8bff" />
+              <stop offset="100%" stop-color="#6be3ff" />
+            </linearGradient>
+          </defs>
+          <rect x="20" y="30" rx="28" ry="28" width="260" height="170" fill="url(#g1)" opacity="0.95"></rect>
+          <circle cx="420" cy="110" r="90" fill="url(#g2)" opacity="0.9"></circle>
+          <path d="M120 250 C 200 190, 380 310, 480 250 L560 360 L20 360 Z" fill="#1a2340" opacity="0.55"></path>
+        </svg>
+      </div>
+    </section>
+
+    <section class="grid cards">
+      <article class="tile interactive">
+        <h3>Institutions</h3>
+        <p class="muted">Présentation des organes et missions.</p>
+        <a class="btn ghost" href="./institutions.html">Voir</a>
+      </article>
+
+      <article class="tile interactive">
+        <h3>Événements</h3>
+        <p class="muted">Calendrier et initiatives.</p>
+        <a class="btn ghost" href="./evenements.html">Voir</a>
+      </article>
+
+      <article class="tile interactive">
+        <h3>Membres</h3>
+        <p class="muted">Les pays membres et contacts.</p>
+        <a class="btn ghost" href="./membres.html">Voir</a>
+      </article>
+    </section>
+
+    <section class="info-strip">
+      <p>Liste des pays membres : <strong>Geekville</strong>, <strong>Océana</strong>, <strong>Bamazoneville</strong>, <strong>Brouardland</strong>, <strong>Artagne</strong>.</p>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p>&copy; 2026 Union Erienne • Design original</p>
+    </div>
+  </footer>
+
+  <script src="./static/ui.js"></script>
+  <script src="./static/chatbot.js"></script>
 </body>
 </html>
