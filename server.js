@@ -15,6 +15,10 @@ app.use(cors({
   credentials: true
 }));
 app.use(express.json());
+app.use((req, res, next) => {
+  res.setHeader('X-Frame-Options', 'SAMEORIGIN');
+  next();
+});
 app.use(express.static('.')); // Servir les fichiers statiques
 
 // Contexte OPTIMISÉ pour Mistral - Format très clair
