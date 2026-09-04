@@ -15,10 +15,35 @@ app.use(cors({
   credentials: true
 }));
 app.use(express.json());
+
+// Politique CSP stricte
 app.use((req, res, next) => {
+  res.setHeader(
+    'Content-Security-Policy',
+    "default-src 'self'; " +
+    "script-src 'self'; " +
+    "style-src 'self' 'unsafe-inline'; " +
+    "img-src 'self' data: https:; " +
+    "font-src 'self'; " +
+    "connect-src 'self' https://api.mistral.ai; " +
+    "frame-ancestors 'self'; " +
+    "base-uri 'self'; " +
+    "form-action 'self'; " +
+    "upgrade-insecure-requests"
+  );
+  
+  // X-Frame-Options
   res.setHeader('X-Frame-Options', 'SAMEORIGIN');
+  
+  // Autres headers de sécurité
+  res.setHeader('X-Content-Type-Options', 'nosniff');
+  res.setHeader('X-XSS-Protection', '1; mode=block');
+  res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
+  res.setHeader('Permissions-Policy', 'geolocation=(), microphone=(), camera=()');
+  
   next();
 });
+
 app.use(express.static('.')); // Servir les fichiers statiques
 
 // Contexte OPTIMISÉ pour Mistral - Format très clair
