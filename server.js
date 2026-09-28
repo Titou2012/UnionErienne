@@ -8,6 +8,84 @@ const fs = require('fs');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+// Rate limiting simple
+const requestQueue = [];
+let isProcessing = false;
+const DELAY_BETWEEN_REQUESTS = 2000; // 2 secondes entre les requêtes
+
+async function processQueue() {
+  if (isProcessing || requestQueue.length === 0) return;
+  
+  isProcessing = true;
+  const { req, res, message } = requestQueue.shift();
+  
+  try {
+    // Vérifier que la clé API est configurée
+    if (!process.env.MISTRAL_API_KEY) {
+      console.error('MISTRAL_API_KEY non configurée');
+      return res.status(500).json({ 
+        error: 'Configuration serveur incomplète',
+        success: false 
+      });
+    }
+
+    // Appel à l'API Mistral
+    const response = await axios.post(
+      'https://api.mistral.ai/v1/chat/completions',
+      {
+        model: 'mistral-small-latest',
+        messages: [
+          {
+            role: 'system',
+            content: SITE_CONTEXT
+          },
+          {
+            role: 'user',
+            content: message
+          }
+        ],
+        temperature: 0.3,
+        max_tokens: 500
+      },
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${process.env.MISTRAL_API_KEY}`
+        }
+      }
+    );
+
+    const reply = response.data.choices[0].message.content;
+
+    res.json({
+      success: true,
+      reply: reply,
+      timestamp: new Date().toISOString()
+    });
+
+  } catch (error) {
+    console.error('Erreur API Mistral:', error.response?.data || error.message);
+    
+    let errorMessage = 'Une erreur est survenue lors du traitement de votre question.';
+    
+    if (error.response?.status === 401) {
+      errorMessage = 'Erreur d\'authentification avec Mistral AI.';
+    } else if (error.response?.status === 429) {
+      errorMessage = 'Service temporairement surchargé. Veuillez attendre quelques secondes et réessayer.';
+    } else if (error.code === 'ECONNREFUSED') {
+      errorMessage = 'Impossible de se connecter au service IA.';
+    }
+
+    res.status(500).json({
+      success: false,
+      error: errorMessage
+    });
+  } finally {
+    isProcessing = false;
+    setTimeout(processQueue, DELAY_BETWEEN_REQUESTS);
+  }
+}
+
 // Middleware
 app.use(cors({
   origin: process.env.FRONTEND_URL || '*',
@@ -127,65 +205,17 @@ app.post('/api/chat', async (req, res) => {
       });
     }
 
-    // Vérifier que la clé API est configurée
-    if (!process.env.MISTRAL_API_KEY) {
-      console.error('MISTRAL_API_KEY non configurée');
-      return res.status(500).json({ 
-        error: 'Configuration serveur incomplète',
-        success: false 
-      });
-    }
-
-    // Appel à l'API Mistral
-    const response = await axios.post(
-      'https://api.mistral.ai/v1/chat/completions',
-      {
-        model: 'mistral-small-latest',
-        messages: [
-          {
-            role: 'system',
-            content: SITE_CONTEXT
-          },
-          {
-            role: 'user',
-            content: message
-          }
-        ],
-        temperature: 0.3, // Réduit pour plus de cohérence
-        max_tokens: 500
-      },
-      {
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${process.env.MISTRAL_API_KEY}`
-        }
-      }
-    );
-
-    const reply = response.data.choices[0].message.content;
-
-    res.json({
-      success: true,
-      reply: reply,
-      timestamp: new Date().toISOString()
-    });
+    // Ajouter à la file d'attente
+    requestQueue.push({ req, res, message });
+    
+    // Traiter la file d'attente
+    processQueue();
 
   } catch (error) {
-    console.error('Erreur API Mistral:', error.response?.data || error.message);
-    
-    let errorMessage = 'Une erreur est survenue lors du traitement de votre question.';
-    
-    if (error.response?.status === 401) {
-      errorMessage = 'Erreur d\'authentification avec Mistral AI.';
-    } else if (error.response?.status === 429) {
-      errorMessage = 'Trop de requêtes. Veuillez attendre quelques secondes.';
-    } else if (error.code === 'ECONNREFUSED') {
-      errorMessage = 'Impossible de se connecter au service IA.';
-    }
-
+    console.error('Erreur serveur:', error.message);
     res.status(500).json({
       success: false,
-      error: errorMessage
+      error: 'Erreur serveur'
     });
   }
 });
@@ -232,7 +262,8 @@ app.post('/api/contact', async (req, res) => {
 app.get('/api/health', (req, res) => {
   res.json({ 
     status: 'ok',
-    timestamp: new Date().toISOString()
+    timestamp: new Date().toISOString(),
+    queueLength: requestQueue.length
   });
 });
 
